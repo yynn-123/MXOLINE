@@ -1,5 +1,5 @@
 import xadmin
-from apps.courses.models import Course
+from apps.courses.models import Course,Lesson,Video,CourseResource
 class CourseAdmin(object):
     list_display = ['id','name','desc','learn_times','category']
     list_filter = ['id', 'name', 'desc', 'learn_times', 'category']
