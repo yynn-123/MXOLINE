@@ -12,7 +12,6 @@ GENDER_CHOICES = (
 class BaseModel(models.Model):
     # verbose_name 修改后台系统字段为定义内容
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
-
     class Meta:
         # 将该基类定义为抽象类，目的不生成表单，只作为一个可以继承的基类
         abstract = True
