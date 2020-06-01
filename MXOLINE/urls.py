@@ -15,8 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+# from apps.users import views
+from django.views.generic import TemplateView
+from apps.users.views import LoginView
 import xadmin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
-]
+#     path('',views.index)
+    #显示首页
+    path('',TemplateView.as_view(template_name='index.html'),name = 'index'),
+    #显示登陆
+    path('login/',LoginView.as_view(),name = 'login'),
+ ]

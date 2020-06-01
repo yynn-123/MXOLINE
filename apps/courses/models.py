@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from apps.users.models import BaseModel
 
+
 class Course(BaseModel):
     name = models.CharField(verbose_name="课程名", max_length=50)
     desc = models.CharField(verbose_name="课程描述", max_length=300)
@@ -26,13 +27,13 @@ class Course(BaseModel):
     class Meta:
         verbose_name = "课程信息"
         verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.name
 
 
-
 class Lesson(BaseModel):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")  #on_delete表示对应的外键数据被删除后，当前的数据应该怎么办
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")  # on_delete表示对应的外键数据被删除后，当前的数据应该怎么办
     name = models.CharField(max_length=100, verbose_name="章节名")
     learn_times = models.IntegerField(default=0, verbose_name="学习时长(分钟数)")
 
@@ -42,7 +43,6 @@ class Lesson(BaseModel):
 
     def __str__(self):
         return self.name
-
 
 
 class Video(BaseModel):
@@ -59,7 +59,6 @@ class Video(BaseModel):
         return self.name
 
 
-
 class CourseResource(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")
     name = models.CharField(max_length=100, verbose_name="名称")
@@ -71,3 +70,22 @@ class CourseResource(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class CourseTag(BaseModel):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")
+    tag = models.CharField(max_length=100, verbose_name="标签")
+
+    class Meta:
+        verbose_name = "课程标签"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.tag
+
+
+class BannerCourse(Course):
+    class Meta:
+        verbose_name = "轮播课程"
+        verbose_name_plural = verbose_name
+        proxy = True
