@@ -35,4 +35,8 @@ class LoginView(View):
                 return HttpResponseRedirect(reverse('index'))
             else:
                 # 未查询到用户,要求重新登陆,还是返回login界面
-                return render(request, 'login.html')
+                return render(request, 'login.html',{'msg':'用户名密码错误','login_form':login_form})
+        else:
+            #提高用户体验，把错误的数据也都返回回去
+            return render(request,'login.html',{'login_form':login_form})
+
