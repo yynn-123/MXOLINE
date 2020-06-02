@@ -20,6 +20,9 @@ from django.views.generic import TemplateView
 
 from apps.organization.views import OrgView
 from apps.users.views import LoginView
+from django.conf.urls import url
+from django.views.static import serve
+from MXOLINE.settings import MEDIA_ROOT
 import xadmin
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +34,6 @@ urlpatterns = [
     path('login/',LoginView.as_view(),name = 'login'),
     #配置授课机构列表展示
     path('orglist/',OrgView.as_view(),name = 'org_list'),
+    # 配置上传文件的URL
+    url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT})
  ]
