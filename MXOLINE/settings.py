@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'xadmin.apps.XAdminConfig',
     'apps.organization.apps.OrganizationConfig',
-    'apps.operations.apps.OperationsConfig'
+    'apps.operations.apps.OperationsConfig',
+    'pure_pagination'
 ]
 
 MIDDLEWARE = [
@@ -69,7 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media'
+                'django.template.context_processors.media',
+
             ],
         },
     },
@@ -137,3 +139,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 1,#主分页显示多少
+    'MARGIN_PAGES_DISPLAYED': 1,#省略号前后显示多少
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}

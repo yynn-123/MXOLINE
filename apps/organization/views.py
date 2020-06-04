@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 from apps.organization.models import CourseOrg, Teacher, City
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 
 class OrgView(View):
@@ -16,13 +17,26 @@ class OrgView(View):
         """
         all_orgs = CourseOrg.objects.all()
         org_nums = CourseOrg.objects.all().count()
-
         all_cities = City.objects.all()
+
+        # '?'这种方式传参采用都是采用get方法，首先过去点击类目
+        category = request.GET.get('ct', '')
+        if category:
+            all_orgs = all_orgs.filter(category=category)
+
+        #分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_orgs, per_page=5, request=request)
+        orgs = p.page(page)
 
         return render(request, 'org-list.html',
                       {
-                          'all_orgs': all_orgs,
+                          'all_orgs': orgs,
                           'org_nums': org_nums,
                           'all_cities': all_cities,
+                          'category':category
                       }
                       )
