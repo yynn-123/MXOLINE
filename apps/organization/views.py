@@ -25,13 +25,13 @@ class OrgView(View):
             all_orgs = all_orgs.filter(category=category)
 
         # 对所在城市进行筛选
-        city_id = request.GET.get('city','')
+        city_id = request.GET.get('city', '')
         if city_id:
             if city_id.isdigit():
-                all_orgs = all_orgs.filter(city_id = int(city_id))
+                all_orgs = all_orgs.filter(city_id=int(city_id))
         org_nums = all_orgs.count()
 
-        #分页
+        # 分页
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
@@ -44,6 +44,7 @@ class OrgView(View):
                           'all_orgs': orgs,
                           'org_nums': org_nums,
                           'all_cities': all_cities,
-                          'category':category
+                          'category': category,
+                          'city_id': city_id
                       }
                       )
