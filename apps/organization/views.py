@@ -21,6 +21,7 @@ class OrgView(View):
 
         # '?'这种方式传参采用都是采用get方法，首先过去点击类目
         category = request.GET.get('ct', '')
+
         if category:
             all_orgs = all_orgs.filter(category=category)
 
@@ -30,7 +31,15 @@ class OrgView(View):
             if city_id.isdigit():
                 all_orgs = all_orgs.filter(city_id=int(city_id))
         org_nums = all_orgs.count()
-
+        # 对课程机构进行排序, - 代表倒叙排序
+        sort = request.GET.get('sort', '')
+        # 根据学生人数排序
+        if sort == 'students':
+            all_orgs = all_orgs.order_by('-students')
+        elif sort == 'courses':
+            # 根据课程数目进行排序
+            all_orgs = all_orgs.order_by('-course_nums')
+        org_nums = all_orgs.count()
         # 分页
         try:
             page = request.GET.get('page', 1)
@@ -45,6 +54,7 @@ class OrgView(View):
                           'org_nums': org_nums,
                           'all_cities': all_cities,
                           'category': category,
-                          'city_id': city_id
+                          'city_id': city_id,
+                          'sort': sort,
                       }
                       )
