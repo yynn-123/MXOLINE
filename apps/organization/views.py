@@ -71,7 +71,7 @@ class Add_Ask(View):
     """
 
     def post(self, request, *args, **kwargs):
-        userask_form = Add_Ask(request.POST)
+        userask_form = AddAskForm(request.POST)
         if userask_form.is_valid():
             userask_form.save(commit=True)
             return JsonResponse({

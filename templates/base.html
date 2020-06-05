@@ -152,31 +152,7 @@
 {% block custom_js %}
 
 {% endblock %}
-<script>
-    $(function () {
-        $(document).ready(function () {
-            $('#jsStayBtn').on('click', function () {
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "/org/add_ask/",
-                    data: $('#jsStayForm').serialize(),
-                    async: true,
-                    success: function (data) {
-                        if (data.status == 'success') {
-                            $('#jsStayForm')[0].reset();
-                            $('#jsCompanyTips').html("");
-                            alert("提交成功")
-                        } else if (data.status == 'fail') {
-                            $('#jsCompanyTips').html(data.msg)
-                        }
-                    },
-                });
-            });
-        });
-    })
 
-</script>
 
 </body>
 </html>
