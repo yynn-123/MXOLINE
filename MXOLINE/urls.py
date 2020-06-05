@@ -38,7 +38,7 @@ urlpatterns = [
     # 配置授课机构相关操作
     url(r'^org/', include(('apps.organization.urls','organization'),namespace='org')),
     # 配置公开课列表展示
-    path('courselist/', TemplateView.as_view(template_name='course-list.html'), name='course-list'),
+    url(r'^course/', include(('apps.courses.urls','courses'),namespace='course')),
     # 配置上传文件的URL
     url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT})
 ]
