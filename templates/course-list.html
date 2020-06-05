@@ -24,9 +24,16 @@
                 <div class="left layout">
                     <div class="head">
                         <ul class="tab_header">
-                            <li class="active"><a href="?sort=">最新 </a></li>
-                            <li><a href="?sort=hot">最热门</a></li>
-                            <li><a href="?sort=students">参与人数</a></li>
+                            <li class="{% ifequal sort '' %}
+                            active
+                            {% endifequal %}"><a href="?sort=">最新 </a></li>
+                            <li class="{% ifequal sort 'hot' %}
+                            active
+                            {% endifequal %}
+                            "><a href="?sort=hot">最热门</a></li>
+                            <li class="{% ifequal sort 'students' %}
+                            active
+                            {% endifequal %}"><a href=" ?sort=students">参与人数</a></li>
                         </ul>
                     </div>
                     <div id="inWindow">
@@ -34,44 +41,55 @@
                             <div class="group_list">
 
                                 {% for course in all_courses.object_list %}
-                                 <div class="box">
-                                    <a href="course-detail.html">
-                                        <img width="280" height="350" class="scrollLoading"
-                                             src="{{ MEDIA_URL }}{{ course.image }}"/>
-                                    </a>
-                                    <div class="des">
+                                    <div class="box">
                                         <a href="course-detail.html">
-                                            <h2>{{ course.name }}</h2>
+                                            <img width="280" height="350" class="scrollLoading"
+                                                 src="{{ MEDIA_URL }}{{ course.image }}"/>
                                         </a>
-                                        <span class="fl">时长：<i class="key">{{ course.learn_times }}</i></span>
-                                        <span class="fr">学习人数：{{ course.students }}&nbsp;&nbsp;</span>
-                                    </div>
-                                    <div class="bottom">
-                                        <a href="course-detail.html"><span class="fl">{{ course.desc }}</span></a>
-                                        <span class="star fr  notlogin
+                                        <div class="des">
+                                            <a href="course-detail.html">
+                                                <h2>{{ course.name }}</h2>
+                                            </a>
+                                            <span class="fl">时长：<i class="key">{{ course.learn_times }}</i></span>
+                                            <span class="fr">学习人数：{{ course.students }}&nbsp;&nbsp;</span>
+                                        </div>
+                                        <div class="bottom">
+                                            <a href="course-detail.html"><span class="fl">{{ course.desc }}</span></a>
+                                            <span class="star fr  notlogin
                                         " data-favid="15">
                                         {{ course.click_nums }}
                                     </span>
+                                        </div>
                                     </div>
-                                </div>
                                 {% endfor %}
-
-
-
 
 
                             </div>
                             <div class="pageturn">
                                 <ul class="pagelist">
 
+                                    {% if all_courses.has_previous %}
+                                        <li class="long"><a href="?{{ all_courses.previous_page_number.querystring }}"
+                                                            class="page">上一页</a></li>
+                                    {% endif %}
+                                    {% for page in all_courses.pages %}
+                                        {% if page %}
+                                            {% ifequal page all_courses.number %}
 
-                                    <li class="active"><a href="?page=1">1</a></li>
-
-
-                                    <li><a href="?page=2" class="page">2</a></li>
-
-
-                                    <li class="long"><a href="?page=2">下一页</a></li>
+                                                <li class="active"><a href="?{{ page.querystring }}"
+                                                                      class="page">{{ page }}</a></li>
+                                            {% else %}
+                                                <li class="page"><a href="?{{ page.querystring }}"
+                                                                    class="page">{{ page }}</a></li>
+                                            {% endifequal %}
+                                        {% else %}
+                                            <li class="none">...</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if all_courses.has_next %}
+                                        <li class="long"><a href="?{{ all_courses.next_page_number.querystring }}"
+                                                            class="page">下一页</a></li>
+                                    {% endif %}
 
 
                                 </ul>
@@ -80,47 +98,28 @@
                     </div>
                 </div>
                 <div class="right layout">
-                    <div class="head">热门课程推荐</div>
+                <div class="head">热门课程推荐</div>
                     <div class="group_recommend">
+                    {% for courses in hot_courses %}
+
 
                         <dl>
                             <dt>
                                 <a target="_blank" href="">
                                     <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/11/540e57300001d6d906000338-240-135_n0L8vbw.jpg"/>
+                                         src="{{ MEDIA_URL }}{{ courses.image }}"/>
                                 </a>
                             </dt>
                             <dd>
-                                <a target="_blank" href=""><h2> django与vuejs实战项目2</h2></a>
-                                <span class="fl">难度：<i class="key">高级</i></span>
+                                <a target="_blank" href=""><h2> {{ courses.name }}</h2></a>
+                                <span class="fl">难度：<i class="key">{{ courses.get_degree_display}}</i></span>
                             </dd>
                         </dl>
+                    {% endfor %}
 
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/12/python面向对象.jpg"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> python面向对象</h2></a>
-                                <span class="fl">难度：<i class="key">中级</i></span>
-                            </dd>
-                        </dl>
 
-                        <dl>
-                            <dt>
-                                <a target="_blank" href="">
-                                    <img width="240" height="220" class="scrollLoading"
-                                         src="../media/courses/2016/12/python文件处理.jpg"/>
-                                </a>
-                            </dt>
-                            <dd>
-                                <a target="_blank" href=""><h2> python文件处理</h2></a>
-                                <span class="fl">难度：<i class="key">中级</i></span>
-                            </dd>
-                        </dl>
+
+
 
 
                     </div>
