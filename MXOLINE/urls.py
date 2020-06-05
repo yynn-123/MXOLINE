@@ -20,22 +20,25 @@ from django.views.generic import TemplateView
 
 from apps.organization.views import OrgView
 from apps.users.views import LoginView
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.views.static import serve
 from MXOLINE.settings import MEDIA_ROOT
 import xadmin
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
-#     path('',views.index)
-    #显示首页
-    path('',TemplateView.as_view(template_name='index.html'),name = 'index'),
-    #显示登陆
-    path('login/',LoginView.as_view(),name = 'login'),
-    #配置授课机构列表展示
-    path('orglist/',OrgView.as_view(),name = 'org_list'),
-    #配置公开课列表展示
-    path('courselist/',TemplateView.as_view(template_name='course-list.html'),name = 'course-list'),
+    #     path('',views.index)
+    # 显示首页
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
+    # 显示登陆
+    path('login/', LoginView.as_view(), name='login'),
+    # 配置授课机构列表展示
+    # path('orglist/', OrgView.as_view(), name='org_list'),
+    # 配置授课机构相关操作
+    url(r'^org/', include(('apps.organization.urls','organization'),namespace='org')),
+    # 配置公开课列表展示
+    path('courselist/', TemplateView.as_view(template_name='course-list.html'), name='course-list'),
     # 配置上传文件的URL
-    url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT})
- ]
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT})
+]
