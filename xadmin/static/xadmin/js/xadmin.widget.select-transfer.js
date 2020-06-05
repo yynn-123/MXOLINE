@@ -12,7 +12,7 @@
     this.to_box = el.find('.selector-chosen select');
 
     var findForm = function(node) {
-        if (node.tagName.toLowerCase() != 'form') {
+        if (node.tagName.toLowerCase() != 'forms.py') {
             return findForm(node.parentNode);
         }
         return node;

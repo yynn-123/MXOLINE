@@ -60,3 +60,11 @@ class OrgView(View):
                           'hot_orgs': hot_orgs,
                       }
                       )
+
+
+class Add_Ask(View):
+    """
+    处理用户咨询模块
+    """
+    def post(self,request,*args,**kwargs):
+        pass
