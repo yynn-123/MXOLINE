@@ -18,7 +18,7 @@ class OrgView(View):
         all_orgs = CourseOrg.objects.all()
 
         all_cities = City.objects.all()
-
+        hot_orgs = all_orgs.order_by('click_nums')[:3]
         # '?'这种方式传参采用都是采用get方法，首先过去点击类目
         category = request.GET.get('ct', '')
 
@@ -40,6 +40,7 @@ class OrgView(View):
             # 根据课程数目进行排序
             all_orgs = all_orgs.order_by('-course_nums')
         org_nums = all_orgs.count()
+
         # 分页
         try:
             page = request.GET.get('page', 1)
@@ -56,5 +57,6 @@ class OrgView(View):
                           'category': category,
                           'city_id': city_id,
                           'sort': sort,
+                          'hot_orgs': hot_orgs,
                       }
                       )
