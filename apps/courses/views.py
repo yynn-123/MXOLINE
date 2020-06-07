@@ -26,14 +26,16 @@ class CourseListView(View):
         elif sort == 'students':
             # 参与人数
             all_courses = all_courses.order_by('-students')
+        else:
+            all_courses = all_courses.order_by('add_time')
         # 热门课程推荐
-        hot_courses = all_courses.order_by('-click_nums')[:3]
+        hot_courses = all_courses.order_by('add_time')[:3]
         # 课程机构分页
         try:
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
-        p = Paginator(all_courses, per_page=3, request=request)
+        p = Paginator(all_courses, per_page=20, request=request)
         courses = p.page(page)
 
         return render(request, 'course-list.html', {

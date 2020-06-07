@@ -7,7 +7,6 @@ from apps.users.models import BaseModel
 
 from apps.users.models import UserProfile
 
-
 class City(BaseModel):
     name = models.CharField(max_length=20, verbose_name="城市名")
     desc = models.CharField(max_length=200, verbose_name="描述")
@@ -21,6 +20,7 @@ class City(BaseModel):
 
 
 class CourseOrg(BaseModel):
+
     name = models.CharField(max_length=50, verbose_name="机构名称")
     tag = models.CharField(default="全国知名", max_length=10, verbose_name="机构标签")
     category = models.CharField(default="pxjg", verbose_name="机构类别", max_length=4,
