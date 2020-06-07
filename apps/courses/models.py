@@ -32,7 +32,12 @@ class Course(BaseModel):
 
     def __str__(self):
         return self.name
-
+    def lesson_nums(self):
+        """
+        统计章节数
+        :return:
+        """
+        return self.lesson_set.all().count()
 
 class Lesson(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name="课程")  # on_delete表示对应的外键数据被删除后，当前的数据应该怎么办
