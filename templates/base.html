@@ -57,45 +57,51 @@
                     {% endif %}
 
 
-        <div class="middle">
-            <div class="wp">
-                <a href="index.html"><img class="fl" src="../static/images/logo.jpg"/></a>
-                <div class="searchbox fr">
-                    <div class="selectContainer fl">
+            <div class="middle">
+                <div class="wp">
+                    <a href="index.html"><img class="fl" src="../static/images/logo.jpg"/></a>
+                    <div class="searchbox fr">
+                        <div class="selectContainer fl">
                             <span class="selectOption" id="jsSelectOption" data-value="course">
                                 公开课
                             </span>
-                        <ul class="selectMenu" id="jsSelectMenu">
-                            <li data-value="course">公开课</li>
-                            <li data-value="org">课程机构</li>
-                            <li data-value="teacher">授课老师</li>
+                            <ul class="selectMenu" id="jsSelectMenu">
+                                <li data-value="course">公开课</li>
+                                <li data-value="org">课程机构</li>
+                                <li data-value="teacher">授课老师</li>
+                            </ul>
+                        </div>
+                        <input id="search_keywords" class="fl" type="text" value="" placeholder="请输入搜索内容"/>
+                        <img class="search_btn fr" id="jsSearchBtn" src="../images/search_btn.png"/>
+                    </div>
+                </div>
+            </div>
+
+
+            <nav>
+                <div class="nav">
+                    <div class="wp">
+                        <ul>
+                            <li class="{% if request.path == '/' %}
+                        active
+                        {% endif %}"><a href="{% url 'index' %}">首页</a></li>
+                            <li class="{% if request.path|slice:'7' == '/course' %}
+                        active
+                        {% endif %}">
+                                <a href="{% url 'course:list' %}">
+                                    公开课<img class="hot" src="../images/nav_hot.png">
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#">授课教师</a>
+                            </li>
+                            <li class="{% if request.path|slice:'4' == '/org' %}
+                        active
+                        {% endif %}"><a href="{% url 'org:list' %}">授课机构</a></li>
                         </ul>
                     </div>
-                    <input id="search_keywords" class="fl" type="text" value="" placeholder="请输入搜索内容"/>
-                    <img class="search_btn fr" id="jsSearchBtn" src="../images/search_btn.png"/>
                 </div>
-            </div>
-        </div>
-
-
-        <nav>
-            <div class="nav">
-                <div class="wp">
-                    <ul>
-                        <li><a href="{% url 'index' %}">首页</a></li>
-                        <li>
-                            <a href="{% url 'course:list' %}">
-                                公开课<img class="hot" src="../images/nav_hot.png">
-                            </a>
-                        </li>
-                        <li>
-                            <a href="teachers-list.html">授课教师</a>
-                        </li>
-                        <li class="active"><a href="{% url 'org:list' %}">授课机构</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </nav>
 
         </div>
     </header>
