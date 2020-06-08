@@ -40,5 +40,7 @@ urlpatterns = [
     # 配置公开课列表展示
     url(r'^course/', include(('apps.courses.urls','courses'),namespace='course')),
     # 配置上传文件的URL
-    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT})
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
+    #配置用户操作相关
+    url(r'^op/',include(('apps.operations.urls','operations'),namespace='op'))
 ]

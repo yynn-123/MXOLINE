@@ -55,7 +55,12 @@
                             </ul>
                             <div class="btns">
                                 <div class="btn colectgroupbtn" id="jsLeftBtn">
-                                    收藏
+                                    {% if has_fav_course %}
+                                        已收藏
+
+                                    {% else %}
+                                        未收藏
+                                    {% endif %}
                                 </div>
                                 <div class="buy btn"><a style="color: white" href="course-video.html">开始学习</a></div>
                             </div>
@@ -91,7 +96,12 @@
                         </a>
                         <div class="btn  notlogin
 					     " data-favid="14" id="jsRightBtn">
-                            已收藏
+                            {% if has_fav_org %}
+                                已收藏
+
+                            {% else %}
+                                未收藏
+                            {% endif %}
                         </div>
                         <div class="clear">
                             <ul>
@@ -252,46 +262,46 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script type="text/javascript">
-        //收藏分享
+    <script>
         function add_fav(current_elem, fav_id, fav_type) {
-            $.ajax({
+          $.ajax({
                 cache: false,
-                type: "POST",
-                url: "/org/add_fav/",
-                data: {'fav_id': fav_id, 'fav_type': fav_type},
+                type: 'POST',
+                url: '{% url 'op:fav' %}',
                 async: true,
+                data: { 'fav_id': fav_id, 'fav_type': fav_type},
                 beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "5I2SlleZJOMUX9QbwYLUIAOshdrdpRcy");
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                 },
                 success: function (data) {
                     if (data.status == 'fail') {
                         if (data.msg == '用户未登录') {
-                            window.location.href = "login.html";
+                            window.location.href = '{% url 'login' %}'
                         } else {
                             alert(data.msg)
                         }
-
                     } else if (data.status == 'success') {
                         current_elem.text(data.msg)
                     }
-                },
-            });
+
+                }
+
+            })
         }
 
+        {# 课程收藏的实现 #}
         $(document).ready(function () {
             $('#jsLeftBtn').on('click', function () {
-                add_fav($(this), 10, 1);
-            });
-        });
+                add_fav($(this), {{ course.id }}, 1)
+            })
+        })
 
+        {# 机构收藏的实现 #}
         $(document).ready(function () {
             $('#jsRightBtn').on('click', function () {
-                add_fav($(this), 2, 2);
-            });
-        });
-
+                add_fav($(this), {{ course.course_org.id }}, 2)
+            })
+        })
     </script>
-
 {% endblock %}
 
