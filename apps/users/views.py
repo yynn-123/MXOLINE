@@ -2,14 +2,19 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from django.http import HttpResponse, HttpResponseRedirect
 from apps.users.form import LoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from django.urls import reverse
 
 
 # Create your views here.
 class LoginView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'login.html')
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('index'))
+        next = request.GET.get('next','')
+        return render(request, 'login.html',{
+            'next':next
+        })
 
     def post(self, request, *args, **kwargs):
         """
@@ -31,6 +36,10 @@ class LoginView(View):
             if user is not None:
                 # 不为空，证明查询到了用户
                 login(request, user)
+                # 取一下next的值
+                next = request.GET.get('next','')
+                if next:
+                    return HttpResponseRedirect(next)
                 # 重定向到网站首页
                 return HttpResponseRedirect(reverse('index'))
             else:
@@ -39,4 +48,11 @@ class LoginView(View):
         else:
             #提高用户体验，把错误的数据也都返回回去
             return render(request,'login.html',{'login_form':login_form})
+
+
+
+class LoginOutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseRedirect(reverse('index'))
 

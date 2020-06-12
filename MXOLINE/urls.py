@@ -19,7 +19,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 from apps.organization.views import OrgView
-from apps.users.views import LoginView
+from apps.users.views import LoginView,LoginOutView
 from django.conf.urls import url, include
 from django.views.static import serve
 from MXOLINE.settings import MEDIA_ROOT
@@ -33,6 +33,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name='index'),
     # 显示登陆
     path('login/', LoginView.as_view(), name='login'),
+    path('loginout/', LoginOutView.as_view(), name='logout'),
     # 配置授课机构列表展示
     # path('orglist/', OrgView.as_view(), name='org_list'),
     # 配置授课机构相关操作
