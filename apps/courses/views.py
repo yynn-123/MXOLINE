@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from apps.operations.models import UserFavorite
-from apps.courses.models import Course
+from apps.courses.models import Course,Video
 
 
 class CourseListView(View):
@@ -74,3 +74,17 @@ class CourseDetailView(View):
             'has_fav_course':has_fav_course,
             'has_fav_org':has_fav_org,
         })
+
+
+class CourseLessonView(View):
+        """章节信息"""
+        def get(self,request,course_id,*args,**kwargs):
+            course = Course.objects.get(id=int(course_id))
+            course.click_nums += 1
+            course.save()
+            return render(request, 'course-video.html', {
+                'course': course,
+
+
+            })
+
