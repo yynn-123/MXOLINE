@@ -37,9 +37,9 @@ class LoginView(View):
                 # 不为空，证明查询到了用户
                 login(request, user)
                 # 取一下next的值
-                next = request.GET.get('next','')
+                next = request.GET.get("next", "")
                 if next:
-                    return HttpResponseRedirect(next)
+                        return HttpResponseRedirect(next)
                 # 重定向到网站首页
                 return HttpResponseRedirect(reverse('index'))
             else:
