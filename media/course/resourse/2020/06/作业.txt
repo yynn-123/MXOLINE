@@ -1,0 +1,73 @@
+ # 课堂作业
+    # 查询所有用户数据
+    print(User.query.all())
+    # 查询有多少个用户
+    print(User.query.count())
+    # 查询第1个用户
+    print(User.query.first())
+    # 查询id为4的用户[3种方式]
+    print(User.query.filter_by(id=4).first())
+    print(User.query.get(4))
+    print(User.query.filter(User.id == 4).first())
+    # 查询名字结尾字符为g的所有数据[开始/包含]
+    print(User.query.filter(User.name.endswith('g')).all())
+    # 查询名字不等于wang的所有数据[2种方式]
+    print(User.query.filter(User.name != 'wang').all())
+    print(User.query.filter(not_(User.name == 'wang')).all())
+    # 查询名字和邮箱都以 li 开头的所有数据[2种方式]
+    print(User.query.filter(and_(User.name.startswith('li'), User.email.startswith('li'))).all())
+    # 查询password是 `123456` 或者 `email` 以 `neuedu.com` 结尾的所有数据
+    print(User.query.filter(or_(User.pswd == '123456', User.email.endswith('neuedu.com'))).all())
+    # 查询id为 [1, 3, 5, 7, 9] 的用户列表
+    print(User.query.filter(User.id.in_([1, 3, 5, 7, 9])).all())
+    # 查询name为liu的角色数据
+    user = User.query.filter(User.name == 'liu').first().role_id
+    print(Role.query.get(user))
+    # # 查询所有用户数据，并以邮箱排序
+    print(User.query.order_by('email').all())
+    # # 每页3个，查询第2页的数据
+    print(User.query.paginate(2, 3).items)
+
+
+
+
+# 创建图书列表
+class Book(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    au_book = db.Column(db.Integer, db.ForeignKey('author.id'))
+    def __repr__(self):
+        return 'Book:{}'.format(self.name)
+
+
+class Author(db.Model):
+    # 定义表名
+    __tablename__ = 'author'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    db.relationship('Book', backref='authors')
+    def __repr__(self):
+        return 'Author:{}'.format(self.name)
+
+
+******添加数据*******
+
+ # 删除表
+    db.drop_all()
+    # 创建表
+    db.create_all()
+    au1 = Author(name='古龙')
+    au2 = Author(name='金庸')
+    au3 = Author(name='鲁迅')
+    db.session.add_all([au1, au2, au3])
+    db.session.commit()
+    book1 = Book(name='小李飞刀', au_book=au1.id)
+    book2 = Book(name='天龙八部', au_book=au2.id)
+    book3 = Book(name='笑傲江湖', au_book=au2.id)
+    book4 = Book(name='鹿鼎记', au_book=au3.id)
+    book5 = Book(name='狂人日记', au_book=au3.id)
+    db.session.add_all([book1, book2, book3, book4, book5])
+    db.session.commit()
+
+    app.run()

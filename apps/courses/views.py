@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from apps.operations.models import UserFavorite
-from apps.courses.models import Course,Video
+from apps.courses.models import Course,Video,CourseResource
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class CourseListView(View):
@@ -83,8 +83,13 @@ class CourseLessonView(LoginRequiredMixin,View):
             course = Course.objects.get(id=int(course_id))
             course.click_nums += 1
             course.save()
+
+
+            # 查询资料信息
+            course_resource = CourseResource.objects.filter(course = course)
             return render(request, 'course-video.html', {
                 'course': course,
+                'course_resource':course_resource
 
 
             })
