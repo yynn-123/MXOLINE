@@ -70,10 +70,16 @@ class CourseDetailView(View):
                 has_fav_course = True
             if UserFavorite.objects.filter(user=request.user, fav_id=course_id, fav_type=2):
                 has_fav_org = True
+        # 相关课程推荐
+        tag = course.tag
+        related_courses = []
+        if tag:
+            related_courses = Course.objects.filter(tag = tag).exclude(id__in=[course.id])[:2]
         return render(request, 'course-detail.html', {
             'course': course,
             'has_fav_course': has_fav_course,
             'has_fav_org': has_fav_org,
+            'relative_courses': related_courses
         })
 
 
@@ -102,6 +108,7 @@ class CourseLessonView(LoginRequiredMixin, View):
         return render(request, 'course-video.html', {
             'course': course,
             'course_resource': course_resource,
-            'related_courses':related_courses
+            'related_courses':related_courses,
+
 
         })
