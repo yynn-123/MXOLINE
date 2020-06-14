@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from apps.operations.models import UserFavorite,UserCourse
-from apps.courses.models import Course, Video, CourseResource
+from apps.courses.models import Course, Video, CourseResource, CourseTag
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -71,10 +71,18 @@ class CourseDetailView(View):
             if UserFavorite.objects.filter(user=request.user, fav_id=course_id, fav_type=2):
                 has_fav_org = True
         # 相关课程推荐
-        tag = course.tag
+        # tag = course.tag
+        # related_courses = []
+        # if tag:
+        #     related_courses = Course.objects.filter(tag = tag).exclude(id__in=[course.id])[:2]
+        # 通过COurseTag进行课程推荐
+        tags = course.coursetag_set.all()
+        # 遍历
+        tag_list = [tag.tag for tag in tags]
+        course_tags = CourseTag.objects.filter(tag__in = tag_list).exclude(course__id = course.id)
         related_courses = []
-        if tag:
-            related_courses = Course.objects.filter(tag = tag).exclude(id__in=[course.id])[:2]
+        for course_tag in course_tags:
+            related_courses.append(course_tag.course)
         return render(request, 'course-detail.html', {
             'course': course,
             'has_fav_course': has_fav_course,
