@@ -1,23 +1,24 @@
 from django.http import JsonResponse
-from django.shortcuts import render
-
 # Create your views here.
 from django.views.generic.base import View
-from apps.operations.forms import UserFavForm
-from apps.operations.models import UserFavorite
+from apps.operations.forms import UserFavForm, CommentForm
+from apps.operations.models import UserFavorite, CourseComments
 from apps.courses.models import Course
 from apps.organization.models import CourseOrg
 from apps.organization.models import Teacher
+
+
 class AddFavView(View):
     """
     用户收藏实现
     """
+
     # 先判断用户是否登陆
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return JsonResponse({
-                'status':'fail',
-                'msg':'用户未登录'
+                'status': 'fail',
+                'msg': '用户未登录'
             })
 
         userFavForm = UserFavForm(request.POST)
@@ -25,19 +26,19 @@ class AddFavView(View):
             fav_id = userFavForm.cleaned_data['fav_id']
             fav_type = userFavForm.cleaned_data['fav_type']
             # 判断用户是否已经收藏
-            existed_recorder = UserFavorite.objects.filter(user = request.user,fav_id = fav_id,fav_type=fav_type)
+            existed_recorder = UserFavorite.objects.filter(user=request.user, fav_id=fav_id, fav_type=fav_type)
             if existed_recorder:
                 # 收藏这条信息删除
                 existed_recorder.delete()
                 if fav_type == 1:
-                    course = Course.objects.get(id = fav_id)
+                    course = Course.objects.get(id=fav_id)
                     course.fav_nums -= 1
                     course.save()
                 elif fav_type == 2:
-                    course_org = CourseOrg.objects.get(id = fav_id)
+                    course_org = CourseOrg.objects.get(id=fav_id)
                     course_org.fav_nums -= 1
                 elif fav_type == 3:
-                    teacher = Teacher.objects.get(id = fav_id)
+                    teacher = Teacher.objects.get(id=fav_id)
                     teacher.fav_nums -= 1
                     teacher.save()
                 return JsonResponse({
@@ -61,3 +62,32 @@ class AddFavView(View):
             })
 
 
+class CommentView(View):
+    """
+    用户评论
+    """
+
+    def post(self, request, *args, **kwargs):
+        # 先判断用户是否登陆
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'status': 'fail',
+                'msg': '用户未登录'
+            })
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            course = comment_form.cleaned_data['course']
+            comments = comment_form.cleaned_data['comments']
+            comment = CourseComments()
+            comment.user = request.user
+            comment.course = course
+            comment.comments = comments
+            comment.save()
+            return JsonResponse({
+                    'status': 'success',
+                })
+        else:
+            return JsonResponse({
+                'status': 'success',
+                'msg': '参数错误 '
+            })
