@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.generic.base import View
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-from apps.operations.models import UserFavorite,UserCourse
+from apps.operations.models import UserFavorite, UserCourse, CourseComments
 from apps.courses.models import Course, Video, CourseResource, CourseTag
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -75,7 +75,7 @@ class CourseDetailView(View):
         # related_courses = []
         # if tag:
         #     related_courses = Course.objects.filter(tag = tag).exclude(id__in=[course.id])[:2]
-        # 通过COurseTag进行课程推荐
+        # 通过CourseTag进行课程推荐
         tags = course.coursetag_set.all()
         # 遍历
         tag_list = [tag.tag for tag in tags]
@@ -118,5 +118,36 @@ class CourseLessonView(LoginRequiredMixin, View):
             'course_resource': course_resource,
             'related_courses':related_courses,
 
+
+        })
+
+
+class CourseCommentsView(LoginRequiredMixin, View):
+    login_url = '/login'
+    """评论信息"""
+
+    def get(self, request, course_id, *args, **kwargs):
+        course = Course.objects.get(id=int(course_id))
+        course.click_nums += 1
+        course.save()
+        comments = CourseComments.objects.filter(course = course)
+        # 该课程的同学还学过
+        # 查询当前用户都学了哪些课程
+        user_courses = UserCourse.objects.filter(course=course)
+        user_ids = [user_course.user.id for user_course in user_courses]
+        # 查询该用户关联的所有课程
+        all_courses = UserCourse.objects.filter(user_id__in=user_ids).order_by('-course__click_nums')[:3]
+        # 过滤掉当前课程
+        related_courses = []
+        for item in all_courses:
+            if item.course.id != course.id:
+                related_courses.append(item.course)
+        # 查询资料信息
+        course_resource = CourseResource.objects.filter(course=course)
+        return render(request, 'course-comment.html', {
+            'course': course,
+            'course_resource': course_resource,
+            'related_courses': related_courses,
+            'comments':comments
 
         })
